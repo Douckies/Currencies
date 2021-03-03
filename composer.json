@@ -1,0 +1,6 @@
+{
+    "require": {
+        "symfony/property-access": "^5.2",
+        "symfony/http-foundation": "^5.2"
+    }
+}

@@ -6,10 +6,10 @@
                     <v-list-item three-line>
                     <v-list-item-content>
                         <div class="overline mb-4">
-                            {{plateforme.plateforme}} 
+                            {{exchangeCardProp.plateforme}} 
                         </div>
-                        <v-list-item-subtitle>Investissement sur la plateforme : {{plateforme.apport}}€.</v-list-item-subtitle>
-                        <v-list-item-subtitle>{{ crypto.length }} cryptos possédées sur cette plateforme.</v-list-item-subtitle>
+                        <v-list-item-subtitle>Total investment in this exchange : {{exchangeCardProp.apport}}€.</v-list-item-subtitle>
+                        <v-list-item-subtitle>{{ currenciesCardProp.length }} currencies owned on this exchange.</v-list-item-subtitle>
                     </v-list-item-content>
                     </v-list-item>
                 </v-card>
@@ -22,11 +22,11 @@
 
 export default {
     props: {
-        plateforme: {
+        exchangeCardProp: {
             type: Object,
             required: true
         },
-        crypto: {
+        currenciesCardProp: {
             type: Array,
             default: () => [{}, {}],
             required: true

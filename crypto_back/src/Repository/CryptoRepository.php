@@ -19,65 +19,50 @@ class CryptoRepository extends ServiceEntityRepository
         parent::__construct($registry, Crypto::class);
     }
 
-    // /**
-    //  * @return Crypto[] Returns an array of Crypto objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Crypto
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
-    public function findAllCrypto()
+    //Function to check if a crypto currancy already exist in an exchange
+    public function checkIfAlreadyExists($cryptoToTest, $plateforme)
     {
         $querySelect = $this->createQueryBuilder('q');
-        $allCrypo = $querySelect
-            ->from('App\Entity\Crypto', 'c')
+        $alreadyExists = $querySelect
+            ->select('q.nom')
+            ->andWhere('q.nom = ?1')
+            ->andWhere('q.plateforme = ?2')
+            ->setParameter(1, $cryptoToTest)
+            ->setParameter(2, $plateforme)
             ->getQuery()
             ->getResult();
-
-        return $allCrypo;
+        
+        return $alreadyExists;
     }
 
-    public function transform(Crypto $crypto)
-    {
-        return [
-                'plateforme' => (string) $crypto->getPlateforme(),
-                'nom' => (string) $crypto->getNom(),
-                'qtt' => (string) $crypto->getQtt(),
-                'investissement' => (string) $crypto->getInvestissement(),
-        ];
-    }
+    public function buyCurrency($currency, $exchange, $quantityBought, $investment) {
+        //Find the currencies on the database
+        $currencyToBuy = $this->findByNom($currency);
 
-    public function transformAll()
-    {
-        $crypto = $this->findAll();
-        $cryptoArray = [];
+        //Filter with the required exchange
+        for ($i = 0; $i <= count($currencyToBuy) - 1; $i++) {
+            $exchangeToVerify = $currencyToBuy[$i]->getPlateforme();
 
-        foreach ($crypto as $crypto) {
-            $cryptoArray[] = $this->transform($crypto);
+            //If it is the required exchange, update the values
+            if($exchangeToVerify === $exchange) {
+                $currencyToBuy[$i]->setInvestissement((int)$currencyToBuy[$i]->getInvestissement() + $investment);
+                $currencyToBuy[$i]->setQtt((int)$currencyToBuy[$i]->getQtt() + $quantityBought);
+            }
         }
+    }
 
-        return $cryptoArray;
+    public function sellCurrency($currency, $exchange, $quantitySold) {
+        //Find the currencies on the database
+        $currencyToSell = $this->findByNom($currency);
+
+        //Filter with the required exchange
+        for ($i = 0; $i <= count($currencyToSell) - 1; $i++) {
+            $exchangeToVerify = $currencyToSell[$i]->getPlateforme();
+
+            //If it is the required exchange, update the values
+            if($exchangeToVerify === $exchange) {
+                $currencyToSell[$i]->setQtt((int)$currencyToSell[$i]->getQtt() - $quantitySold);
+            }
+        }
     }
 }

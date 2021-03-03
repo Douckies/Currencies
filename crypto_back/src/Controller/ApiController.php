@@ -2,10 +2,16 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class ApiController
 {
+    protected $serializer;
 
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
     /**
      * @var integer HTTP status code - 200 (OK) by default
      */

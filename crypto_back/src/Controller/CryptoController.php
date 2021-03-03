@@ -5,38 +5,82 @@ use App\Entity\Crypto;
 use App\Repository\CryptoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class CryptoController extends ApiController
 {
     /**
-    * @Route("/crypto", methods="GET")
+    * @Route("/cryptos", methods="GET")
     */
     public function index(CryptoRepository $cryptoRepository)
     {
-        $crypto = $cryptoRepository->transformAll();
+        //Fetch all the crypto currancies in the database.
+        $cryptos = $cryptoRepository->findAll();
 
-        return $this->respond($crypto);
+        //Serialize the array in JSON to return.
+        return new Response($this->serializer->serialize($cryptos, 'json'),
+            Response::HTTP_OK, ['Content-Type' => 'application/json']);
     }
 
-     /**
-    * @Route("/crypto", methods="POST")
+    /**
+    * @Route("/crypto/newCrypto", methods="POST")
     */
-    public function create(Request $request, CryptoRepository $cryptoRepository, EntityManagerInterface $em)
+    public function newCurrency(Request $request, CryptoRepository $cryptoRepository, EntityManagerInterface $em)
     {
         $parameters = json_decode($request->getContent(), true);
-        //dd($parameters);
-        //$request = $this->transformJsonBody($request);
-        $crypto = new Crypto;
-        $crypto->setPlateforme($parameters['plateforme']);
-        $crypto->setNom($parameters['nom']);
-        $crypto->setQtt($parameters['qtt']);
-        $crypto->setInvestissement($parameters['investissement']);
 
-        $em->persist($crypto);
+        $alreadyExists = $cryptoRepository->checkIfAlreadyExists($parameters['currency'], $parameters['exchange']);
+        
+        //If currency already exists, update the database. Otherwise, crete the entry
+        if($alreadyExists) {
+            $cryptoRepository->buyCurrency(
+                $parameters['currency'], 
+                $parameters['exchange'], 
+                $parameters['quantity'], 
+                $parameters['investment']
+            );
+        } else {
+            $crypto = new Crypto;
+            $crypto->setPlateforme($parameters['exchange']);
+            $crypto->setNom($parameters['currency']);
+            $crypto->setQtt($parameters['quantity']);
+            $crypto->setInvestissement($parameters['investment']);
+            $em->persist($crypto);          
+        }
+
         $em->flush();
 
-        return $this->respondCreated($cryptoRepository->transform($crypto));
+        return $this->respondCreated();
+    }
+
+    /**
+    * @Route("/crypto/sellCrypto", methods="POST")
+    */
+    public function sell(Request $request, CryptoRepository $cryptoRepository, EntityManagerInterface $em)
+    {
+        $parameters = json_decode($request->getContent(), true);
+
+        $alreadyExists = $cryptoRepository->checkIfAlreadyExists($parameters['currencyToBuy'], $parameters['exchange']);
+
+        //Check if the new currency already exists
+        $cryptoRepository->sellCurrency($parameters['currencyToSell'], $parameters['exchange'], $parameters['quantityToSell']);
+
+        //If already exists, update the database, otherwise create the entry
+        if($alreadyExists) {
+            $cryptoRepository->buyCurrency($parameters['currencyToBuy'], $parameters['exchange'], $parameters['quantityToBuy'], $parameters['investment']);
+        } else {
+            $crypto = new Crypto;
+            $crypto->setPlateforme($parameters['exchange']);
+            $crypto->setNom($parameters['currencyToBuy']);
+            $crypto->setQtt($parameters['quantityToBuy']);
+            $crypto->setInvestissement(0); 
+            $em->persist($crypto);
+        }
+
+        $em->flush();
+
+        return $this->respondCreated();
     }
 }

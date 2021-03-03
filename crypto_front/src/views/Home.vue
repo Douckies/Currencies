@@ -10,29 +10,28 @@
         <v-list-item three-line>
           <v-list-item-content>
             <v-list-item-title class="headline mb-1">
-              Investissement
+              Investment
             </v-list-item-title>
             <div class="overline mb-4">
-              Investissement total : {{apportTotal}}€. <br/>
-              Actuellement {{cryptos.length}} cryptos différentes dans le portefeuille. <br/>
+              Total investment : {{totalInvestment}}€. <br/>
+              Actually {{currenciesOwned.length}} different currencies owned. <br/>
             </div>
           </v-list-item-content>
         </v-list-item>
       </v-row>
-
+      
       <v-row>
-        <v-col v-for='(plateforme, index) in apport'
-        :key='plateforme.plateforme'
+        <v-col v-for='(exchangeHome, index) in investmentByExchange'
+        :key='exchangeHome.plateforme'
         >
-          <cryptoCard :plateforme='plateforme' 
-            :crypto='crypto[index]' 
-            @click.native="$router.push({ name: 'plateforme', params: { plateforme: plateforme, crypto: crypto[index] } })"
+          <cryptoCard :exchangeCardProp='exchangeHome' 
+            :currenciesCardProp='currenciesByExchange[index]' 
+            @click.native="$router.push({ name: 'Exchange', params: { selectedExchange: exchangeHome, exchangeCurrencies: currenciesByExchange[index] } })"
           />
         </v-col>
       </v-row>
       </v-card>
     </v-col>
-    <p> {{crypto}} </p>
   </v-row>
 </v-app>
 </template>
@@ -50,41 +49,39 @@ export default {
 
   data() {
     return {
-      apportTotal: 0,
-      crypto: []
+      totalInvestment: 0,
+      currenciesByExchange: []
     }
   },
 
   computed: {
     ...mapGetters({
-      apport: 'getApport',
-      cryptos: 'getCryptos',
-      cryptoBinance: 'getCryptoBinance',
-      cryptoCryptoCom: 'getCryptoCryptoCom',
-      cryptoSwissborg: 'getCryptoSwissborg'
+      investmentByExchange: 'getTotalInvestment',
+
+      currenciesOwned: 'getCurrenciesOwned',
+
+      cryptoBinance: 'getCurrenciesExchangeBinance',
+      cryptoCryptoCom: 'getCurrenciesExchangeCryptoCom',
+      cryptoSwissborg: 'getCurrenciesExchangeSwissborg'
     }) 
   },
 
   methods: {
-    calculInvestissementTotal() {
-      for(let i = 0; i<this.apport.length; i++) {
-        this.apportTotal += Number(this.apport[i].apport, 10)
+    computeTotalInvestment() {
+      for(let i = 0; i<this.investmentByExchange.length; i++) {
+        this.totalInvestment += Number(this.investmentByExchange[i].apport, 10)
       }
     },
-
-    toPlateforme() {
-      console.log('click')
-      
-    }
   },
 
   async created() {
-    await this.$store.dispatch('get_apport')
-    this.calculInvestissementTotal()
-    this.crypto.push(this.cryptoBinance)
-    this.crypto.push(this.cryptoSwissborg)
-    this.crypto.push(this.cryptoCryptoCom)
-    console.log(this.crypto[0])
+    await this.$store.dispatch('get_investment')
+
+    this.computeTotalInvestment()
+
+    this.currenciesByExchange.push(this.cryptoBinance)
+    this.currenciesByExchange.push(this.cryptoSwissborg)
+    this.currenciesByExchange.push(this.cryptoCryptoCom)
   }
 };
 </script>

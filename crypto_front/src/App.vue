@@ -18,7 +18,7 @@
         ></v-img>
       </template>
 
-      <v-app-bar-title>Cryptos</v-app-bar-title>
+      <v-app-bar-title>CryptoCurrencies</v-app-bar-title>
 
       <template v-slot:extension>
         <v-tabs align-with-title>
@@ -27,7 +27,7 @@
           :key='link.id'
           :to='link.url'
           >
-            {{link.nom}}
+            {{link.name}}
           </v-tab>
         </v-tabs>
       </template>
@@ -53,17 +53,16 @@ export default {
   data() {
     return {
       links: [
-        {id: 3, nom:'Home', url:'/'},
-        {id: 0, nom:'Liste', url: '/liste'},
-        {id: 1, nom:'Achat', url: '/achat'},
-        {id: 2, nom:'Vente', url: '/vente'},
+        {id: 3, name:'Home', url:'/'},
+        {id: 0, name:'List', url: '/list'},
+        {id: 1, name:'Operations', url: '/operations'},
       ]
     }
   },
 
   created() {
-    this.$store.dispatch('get_apport')
-    this.$store.dispatch('get_crypto')
+    this.$store.dispatch('get_investment')
+    this.$store.dispatch('get_currencies_owned')
   }
 }
 </script>

@@ -19,67 +19,12 @@ class ApportRepository extends ServiceEntityRepository
         parent::__construct($registry, Apport::class);
     }
 
-    // /**
-    //  * @return Apport[] Returns an array of Apport objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function updateApportByExchange($exchange, $apport)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $exchangeToProvide = $this->findOneByPlateforme($exchange);
+        dump($exchangeToProvide);
 
-    public function updateApportByPlateforme($plateforme, $amount)
-    {
-        //Requête pour trouver le montant d'apport actuelle sur la plateforme
-        $qb = $this->createQueryBuilder('p')
-        ->select('p.apport')
-        ->where('p.plateforme = ?1')
-        ->setParameter(1, $plateforme);
-
-        $amountQuerry = $qb->getQuery()->getResult();
-        $actualAmount = $amountQuerry[0]["apport"];
-
-        //Ajoute le montant passé en paramètre
-        (int)$totalAmount = (int)$actualAmount + (int)$amount;
-        
-        //Update l'apport
-        $queryUpdate = $this->createQueryBuilder('a');
-        $q = $queryUpdate->update('App\Entity\Apport', 'a')
-        ->set('a.apport', '?1')
-        ->andWhere('a.plateforme = ?2')
-        ->setParameter(1, $totalAmount)
-        ->setParameter(2, $plateforme)
-        ->getQuery()
-        ->getResult();
-
-        $totalAmount = 0;
-    }
-
-    public function transform(Apport $apport)
-    {
-        return [
-                'plateforme' => (string) $apport->getPlateforme(),
-                'apport' => (string) $apport->getApport()
-        ];
-    }
-
-    public function transformAll()
-    {
-        $apport = $this->findAll();
-        $apportArray = [];
-
-        foreach ($apport as $apport) {
-            $apportArray[] = $this->transform($apport);
-        }
-
-        return $apportArray;
+        $exchangeToProvide->setApport((int)$exchangeToProvide->getApport() + $apport);
+        dump($exchangeToProvide);
     }
 }

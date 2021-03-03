@@ -1,10 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import Liste from "../views/Liste.vue";
-import Achat from "../views/Achat.vue";
-import Vente from "../views/Vente.vue";
-import Plateforme from "../views/Plateforme.vue";
+import List from "../views/List.vue";
+import Operations from "../views/Operations.vue";
+import Exchange from "../views/Exchange.vue";
 
 Vue.use(VueRouter);
 
@@ -15,25 +14,20 @@ const routes = [
     component: Home
   },
   {
-    path: "/liste",
-    name: "Liste",
-    component: Liste
+    path: "/list",
+    name: "List",
+    component: List
   },
   {
-    path: "/vente",
-    name: "Vente",
-    component: Vente
+    path: "/operations",
+    name: "Operations",
+    component: Operations
   },
   {
-    path: "/achat",
-    name: "Achat",
-    component: Achat
-  },
-  {
-    path: '/plateforme',
+    path: '/exchange',
     props: true,
-    name: 'plateforme',
-    component: Plateforme
+    name: 'Exchange',
+    component: Exchange
   }
 ];
 

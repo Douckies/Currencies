@@ -10,20 +10,23 @@ const apiClient = axios.create({
 });
 
 export default {
-  getCrypto() {
-    return apiClient.get("/crypto");
+  getCurrenciesOwned() {
+    return apiClient.get("/cryptos");
   },
 
-  getApport() {
+  getInvestment() {
     return apiClient.get("/apport");
   },
 
-  postAchatCrypto(crypto) {
-    apiClient.post("/crypto", crypto)
+  postBuyNewCurrency(currencyToBuy) {
+    apiClient.post("/crypto/newCrypto", currencyToBuy)
   },
 
-  postApport(apport) {
-    apiClient.post("/apport", apport)
-    console.log('api : '+apport)
+  postInvestInExchange(investment) {
+    apiClient.post("/apport", investment)
+  },
+
+  postSellCurrency(currencyToSell) {
+    apiClient.post("/crypto/sellCrypto", currencyToSell)
   }
 };

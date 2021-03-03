@@ -2,61 +2,74 @@ import apiCalls from '@/service/apiCalls.js'
 
 export default {
     state: {
-        crypto: [],
-        apport: []
+        curenciesOwned: [],
+        totalInvestment: []
     },
     mutations: {
         GET_CRYPTO(state, value) {
-            state.crypto = value.data
+            state.curenciesOwned = value.data
         },
 
         POST_CRYPTO(state, value) {
-            state.crypto.push(value)
+            state.curenciesOwned.push(value)
         },
 
-        GET_APPORT(state, value) {
-            state.apport = value.data
-            //console.log(state.apport)
+        GET_INVESTMENT(state, value) {
+            state.totalInvestment = value.data
         },
 
         POST_APPORT() {
 
         },
+
+        SELLING_CURRENCY() {
+
+        }
     },
     actions: {
-        async get_crypto({commit}) {
-            const value = await apiCalls.getCrypto()
+        async get_currencies_owned({commit}) {
+            const value = await apiCalls.getCurrenciesOwned()
             if(value) {
                 commit('GET_CRYPTO', value)
             }
         },
 
-        async post_newCrypto({commit}, newCrypto) {
-            await apiCalls.postAchatCrypto(newCrypto)
-            commit('POST_CRYPTO', newCrypto)
+        async post_buyCurrency({commit}, newCurrencyToBuy) {
+            await apiCalls.postBuyNewCurrency(newCurrencyToBuy)
+            commit('POST_CRYPTO', newCurrencyToBuy)
         },
 
-        async get_apport({commit}) {
-            const value = await apiCalls.getApport()
+        async post_sellCurrency({commit}, currencyToSell) {
+            await apiCalls.postSellCurrency(currencyToSell)
+            commit('SELLING_CURRENCY')
+        },
+
+        async get_investment({commit}) {
+            const value = await apiCalls.getInvestment()
             if(value) {
-                commit('GET_APPORT', value)
+                commit('GET_INVESTMENT', value)
             }
         },
 
-        async post_apport({commit}, apport) {
-            await apiCalls.postApport(apport)
-            commit('GET_APPORT', apport)
+        async post_investment({commit}, investment) {
+            await apiCalls.postInvestInExchange(investment)
+            commit('GET_APPORT', investment)
         },
     },
     getters: {
-        getCryptos: state => state.crypto,
-        getCryptoBinance: state => state.crypto.filter(crypto => crypto.plateforme === 'Binance'),
-        getCryptoCryptoCom: state => state.crypto.filter(crypto => crypto.plateforme === 'Crypto.com'),
-        getCryptoSwissborg: state => state.crypto.filter(crypto => crypto.plateforme === 'Swissborg'),
+        getCurrenciesOwned: state => state.curenciesOwned,
+        getCurrenciesExchangeBinance: state => state.curenciesOwned.filter(currency => currency.plateforme === 'Binance'),
+        getCurrenciesExchangeCryptoCom: state => state.curenciesOwned.filter(currency => currency.plateforme === 'Crypto.com'),
+        getCurrenciesExchangeSwissborg: state => state.curenciesOwned.filter(currency => currency.plateforme === 'SwissBorg'),
         
-        getApport: state => state.apport,
-        getPlateforme: state => state.apport.map(item => item.plateforme),
+        getTotalInvestment: state => state.totalInvestment,
+        getExchanges: state => state.totalInvestment.map(item => item.plateforme),
 
+
+        getCurrenciesNameByExchange: (state) => (exchangeToFilter) => {
+            let currenciesFiltered = state.curenciesOwned.filter(currency => currency.plateforme === exchangeToFilter)
+            return currenciesFiltered.map(currency => currency.nom)
+        }
     },
     modules: {}
 }
