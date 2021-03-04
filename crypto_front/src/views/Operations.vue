@@ -67,6 +67,6 @@ import investExchangeForm from '@/components/investExchangeForm.vue'
 
     created() {
       this.$store.dispatch('get_currencies_owned')
-    }
+    },
   }
 </script>

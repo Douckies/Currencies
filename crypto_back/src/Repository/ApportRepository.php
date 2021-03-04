@@ -18,13 +18,4 @@ class ApportRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Apport::class);
     }
-
-    public function updateApportByExchange($exchange, $apport)
-    {
-        $exchangeToProvide = $this->findOneByPlateforme($exchange);
-        dump($exchangeToProvide);
-
-        $exchangeToProvide->setApport((int)$exchangeToProvide->getApport() + $apport);
-        dump($exchangeToProvide);
-    }
 }

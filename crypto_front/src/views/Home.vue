@@ -19,14 +19,14 @@
           </v-list-item-content>
         </v-list-item>
       </v-row>
-      
+
       <v-row>
-        <v-col v-for='(exchangeHome, index) in investmentByExchange'
+        <v-col v-for='exchangeHome in investmentByExchange'
         :key='exchangeHome.plateforme'
         >
           <cryptoCard :exchangeCardProp='exchangeHome' 
-            :currenciesCardProp='currenciesByExchange[index]' 
-            @click.native="$router.push({ name: 'Exchange', params: { selectedExchange: exchangeHome, exchangeCurrencies: currenciesByExchange[index] } })"
+            :currenciesCardProp='currenciesOwned.filter(exchange => exchange.plateforme === exchangeHome.plateforme)' 
+            @click.native="$router.push({ name: 'Exchange', params: { selectedExchange: exchangeHome, exchangeCurrencies: currenciesOwned.filter(exchange => exchange.plateforme === exchangeHome.plateforme) } })"
           />
         </v-col>
       </v-row>
@@ -65,13 +65,7 @@ export default {
   computed: {
     ...mapGetters({
       investmentByExchange: 'getTotalInvestment',
-      historyList: 'getHistory',
-
       currenciesOwned: 'getCurrenciesOwned',
-
-      cryptoBinance: 'getCurrenciesExchangeBinance',
-      cryptoCryptoCom: 'getCurrenciesExchangeCryptoCom',
-      cryptoSwissborg: 'getCurrenciesExchangeSwissborg'
     }) 
   },
   methods: {
@@ -84,14 +78,7 @@ export default {
 
   async created() {
     await this.$store.dispatch('get_investment')
-    await this.$store.dispatch('get_history')
-
     this.computeTotalInvestment()
-
-    this.currenciesByExchange.push(this.cryptoBinance)
-    this.currenciesByExchange.push(this.cryptoSwissborg)
-    this.currenciesByExchange.push(this.cryptoCryptoCom)
   }
 };
 </script>
-,

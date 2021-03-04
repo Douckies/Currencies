@@ -29,8 +29,16 @@ class ApportController extends ApiController
     public function create(Request $request, ApportRepository $apportRepository, EntityManagerInterface $em)
     {
         $parameters = json_decode($request->getContent(), true);
+        $exchangeToProvide = $apportRepository->findOneByPlateforme($parameters['exchange']);
 
-        $apportRepository->updateApportByExchange($parameters['exchange'], $parameters['apport']);
+        if($exchangeToProvide) {
+            $exchangeToProvide->setApport((int)$exchangeToProvide->getApport() + $parameters['quantityToBuy']);
+        } else {
+            $apport = new Apport;
+            $apport->setPlateforme($parameters['exchange']);
+            $apport->setApport($parameters['quantityToBuy']);
+            $em->persist($apport);
+        }
 
         $em->flush();
 

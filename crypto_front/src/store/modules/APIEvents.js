@@ -5,7 +5,6 @@ export default {
         curenciesOwned: [],
         totalInvestment: [],
         history: [],
-        todayDate: new Date().toLocaleString(),
     },
     mutations: {
         GET_CRYPTO(state, value) {
@@ -54,7 +53,7 @@ export default {
 
         async post_investment({commit}, investment) {
             await apiCalls.postInvestInExchange(investment)
-            commit('GET_APPORT', investment)
+            commit('POST_APPORT', investment)
         },
 
         async get_history({commit}) {
@@ -64,22 +63,18 @@ export default {
             }
         },
 
-        async post_history({state, commit}, order) {
-            order.date = state.todayDate            
+        async post_history({commit}, order) {
             await apiCalls.postHistory(order)
             commit('POST_HISTORY')
         },
     },
     getters: {
         getCurrenciesOwned: state => state.curenciesOwned,
-        getCurrenciesExchangeBinance: state => state.curenciesOwned.filter(currency => currency.plateforme === 'Binance'),
-        getCurrenciesExchangeCryptoCom: state => state.curenciesOwned.filter(currency => currency.plateforme === 'Crypto.com'),
-        getCurrenciesExchangeSwissborg: state => state.curenciesOwned.filter(currency => currency.plateforme === 'SwissBorg'),
-        
+
         getTotalInvestment: state => state.totalInvestment,
         getExchanges: state => state.totalInvestment.map(item => item.plateforme),
 
-        getHistory: state => state.history,
+        getHistory: state => state.history.reverse(),
 
         getCurrenciesNameByExchange: (state) => (exchangeToFilter) => {
             let currenciesFiltered = state.curenciesOwned.filter(currency => currency.plateforme === exchangeToFilter)

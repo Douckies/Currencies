@@ -54,14 +54,12 @@
                             </div>
                         </div>
                     </div> 
-
                 </v-timeline>
 
                 <div class="text-right">
                     <button v-if='!showAll' @click="showAll = !showAll"> Show More </button>
                     <button v-if='showAll' @click="showAll = !showAll"> Show less </button>
                 </div>
-                
             </v-card-text>
         </v-card>
     </v-app>
@@ -77,14 +75,14 @@ export default {
   
   data() {
       return {
-          showAll: false
+          showAll: false,
       }
   },
 
   computed: {
     ...mapGetters({
-      historyList: 'getHistory',
-    }) 
+      historyList: 'getHistory'
+    }),
   },
 
   async created() {

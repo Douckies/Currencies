@@ -30,9 +30,10 @@ class HistoryController extends ApiController
     public function newCurrency(Request $request, HistoryRepository $historyRepository, EntityManagerInterface $em)
     {
         $parameters = json_decode($request->getContent(), true);
+        $time = date("d-m-Y, H:i:s");
 
         $history = new History;
-        $history->setDate($parameters['date']);
+        $history->setDate($time);
         $history->setExchange($parameters['exchange']);
         $history->setBoughtCurrency($parameters['currencyToBuy']);
         $history->setBoughtCurrencyQtt($parameters['quantityToBuy']);

@@ -8,7 +8,7 @@
             required
           ></v-text-field>
           <v-text-field
-            v-model='investInExchange.apport'
+            v-model='investInExchange.quantityToBuy'
             label="Value (€)"
             placeholder="500"
             required 
@@ -41,7 +41,11 @@ export default {
 
     methods: {
       submit() {
+        this.investInExchange.currencyToBuy = 'USD'
+        this.investInExchange.investment = this.investInExchange.quantityToBuy
         this.$store.dispatch('post_investment', this.investInExchange)
+        this.$store.dispatch('post_orderCurrency', this.investInExchange)
+        this.$store.dispatch('post_history', this.investInExchange)
       }
     },
 }

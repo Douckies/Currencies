@@ -27,14 +27,17 @@ class CryptoController extends ApiController
     /**
     * @Route("/crypto/orderCurrency", methods="POST")
     */
-    public function sell(Request $request, CryptoRepository $cryptoRepository, EntityManagerInterface $em)
+    public function orderCurrency(Request $request, CryptoRepository $cryptoRepository, EntityManagerInterface $em)
     {
         $parameters = json_decode($request->getContent(), true);
 
-        $alreadyExists = $cryptoRepository->checkIfAlreadyExists($parameters['currencyToBuy'], $parameters['exchange']);
-
         //Check if the new currency already exists
-        $cryptoRepository->sellCurrency($parameters['currencyToSell'], $parameters['exchange'], $parameters['quantityToSell']);
+        $alreadyExists = $cryptoRepository->checkIfAlreadyExists($parameters['currencyToBuy'], $parameters['exchange']);
+            
+        //Sell the currency if there is a currency to sell
+        if(array_key_exists('currencyToSell', $parameters)) {
+            $cryptoRepository->sellCurrency($parameters['currencyToSell'], $parameters['exchange'], $parameters['quantityToSell']);
+        }
 
         //If already exists, update the database, otherwise create the entry
         if($alreadyExists) {
@@ -45,6 +48,11 @@ class CryptoController extends ApiController
             $crypto->setNom($parameters['currencyToBuy']);
             $crypto->setQtt($parameters['quantityToBuy']);
             $crypto->setInvestissement(0); 
+
+            if ($parameters['currencyToBuy'] === 'USD') {
+                $crypto->setInvestissement($parameters['investment']);
+            }
+
             $em->persist($crypto);
         }
 
