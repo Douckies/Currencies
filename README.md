@@ -2,7 +2,7 @@
 # Done 
 
 Home : <br />
-	- Recap of the wallet : <br />
+  - Recap of the wallet : <br />
       * total investment - Number of owned currencies <br />
       * Recap of the wallet by Exchange
       * Cliquing on the exchange card will redirect you to the selected exchange view <br />
@@ -23,7 +23,7 @@ Application : <br />
 # Next targets  
 
 Home : <br />
-	- Proper display of home by exchange : <br />
+  - Proper display of home by exchange : <br />
 
 Operations : <br /> <br />
   - Unitary test to validate the form <br />
