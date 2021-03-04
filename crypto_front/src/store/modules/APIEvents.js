@@ -3,7 +3,9 @@ import apiCalls from '@/service/apiCalls.js'
 export default {
     state: {
         curenciesOwned: [],
-        totalInvestment: []
+        totalInvestment: [],
+        history: [],
+        todayDate: new Date().toLocaleString(),
     },
     mutations: {
         GET_CRYPTO(state, value) {
@@ -22,7 +24,11 @@ export default {
 
         },
 
-        SELLING_CURRENCY() {
+        GET_HISTORY(state, value) {
+            state.history = value.data
+        },
+
+        POST_HISTORY() {
 
         }
     },
@@ -34,14 +40,9 @@ export default {
             }
         },
 
-        async post_buyCurrency({commit}, newCurrencyToBuy) {
-            await apiCalls.postBuyNewCurrency(newCurrencyToBuy)
-            commit('POST_CRYPTO', newCurrencyToBuy)
-        },
-
-        async post_sellCurrency({commit}, currencyToSell) {
-            await apiCalls.postSellCurrency(currencyToSell)
-            commit('SELLING_CURRENCY')
+        async post_orderCurrency({commit}, newOrder) {
+            await apiCalls.postOrderCurrency(newOrder)
+            commit('POST_CRYPTO', newOrder)
         },
 
         async get_investment({commit}) {
@@ -55,6 +56,19 @@ export default {
             await apiCalls.postInvestInExchange(investment)
             commit('GET_APPORT', investment)
         },
+
+        async get_history({commit}) {
+            const value = await apiCalls.getHistory()
+            if(value) {
+                commit('GET_HISTORY', value)
+            }
+        },
+
+        async post_history({state, commit}, order) {
+            order.date = state.todayDate            
+            await apiCalls.postHistory(order)
+            commit('POST_HISTORY')
+        },
     },
     getters: {
         getCurrenciesOwned: state => state.curenciesOwned,
@@ -65,6 +79,7 @@ export default {
         getTotalInvestment: state => state.totalInvestment,
         getExchanges: state => state.totalInvestment.map(item => item.plateforme),
 
+        getHistory: state => state.history,
 
         getCurrenciesNameByExchange: (state) => (exchangeToFilter) => {
             let currenciesFiltered = state.curenciesOwned.filter(currency => currency.plateforme === exchangeToFilter)

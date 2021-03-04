@@ -1,6 +1,4 @@
 <template>
-  <v-row justify="center">
-    <v-col>
       <v-card>
         <v-card-text>
           <v-text-field
@@ -29,8 +27,6 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-col>
-  </v-row>
 </template>
 
 <script>

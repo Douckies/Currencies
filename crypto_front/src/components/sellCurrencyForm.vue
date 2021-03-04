@@ -1,7 +1,6 @@
 <template>
   <v-app>
-    <v-row>
-      <v-col>
+
         <v-card>
           <v-card-text>
             <v-select
@@ -49,8 +48,6 @@
             </v-btn>
           </v-card-actions>
         </v-card>
-      </v-col>
-    </v-row>
   </v-app>
 </template>
 
@@ -60,7 +57,7 @@ import { mapGetters } from 'vuex'
   export default {
     data() {
       return {
-        currencyToSell: {}
+        currencyToSell: {},
       }
     },
 
@@ -68,6 +65,7 @@ import { mapGetters } from 'vuex'
       ...mapGetters({
         exchanges: 'getExchanges',
       }),
+
       currenciesNameByExchange() {
         return this.$store.getters.getCurrenciesNameByExchange(this.currencyToSell.exchange)
       }
@@ -78,7 +76,9 @@ import { mapGetters } from 'vuex'
         if(!this.currencyToSell.investment) {
           this.currencyToSell.investment = 0
         }
-        this.$store.dispatch('post_sellCurrency', this.currencyToSell.exchange)
+        this.$store.dispatch('post_orderCurrency', this.currencyToSell)
+        this.currencyToSell.operation = 'sell'
+        this.$store.dispatch('post_history', this.currencyToSell)
       }
     },
   }

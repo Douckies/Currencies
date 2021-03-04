@@ -30,6 +30,12 @@
           />
         </v-col>
       </v-row>
+
+      <v-row>
+        <v-col>
+          <displayHistory/>
+        </v-col>
+      </v-row>
       </v-card>
     </v-col>
   </v-row>
@@ -40,11 +46,13 @@
 // @ is an alias to /src
 import { mapGetters } from 'vuex'
 import cryptoCard from '@/components/cryptoCard.vue'
+import displayHistory from '@/components/displayHistory.vue'
 
 export default {
   name: "Home",
   components: {
-    cryptoCard
+    cryptoCard,
+    displayHistory
   },
 
   data() {
@@ -57,6 +65,7 @@ export default {
   computed: {
     ...mapGetters({
       investmentByExchange: 'getTotalInvestment',
+      historyList: 'getHistory',
 
       currenciesOwned: 'getCurrenciesOwned',
 
@@ -65,17 +74,17 @@ export default {
       cryptoSwissborg: 'getCurrenciesExchangeSwissborg'
     }) 
   },
-
   methods: {
     computeTotalInvestment() {
       for(let i = 0; i<this.investmentByExchange.length; i++) {
         this.totalInvestment += Number(this.investmentByExchange[i].apport, 10)
       }
-    },
+    },            
   },
 
   async created() {
     await this.$store.dispatch('get_investment')
+    await this.$store.dispatch('get_history')
 
     this.computeTotalInvestment()
 

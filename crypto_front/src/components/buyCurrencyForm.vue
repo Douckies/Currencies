@@ -1,6 +1,4 @@
 <template>
-  <v-row>
-    <v-col>
       <v-card>
         <v-card-text>
           <v-select
@@ -10,27 +8,27 @@
           ></v-select>
 
           <v-text-field
-            v-model="currencyToBuy.currency"
+            v-model="currencyToBuy.currencyToBuy"
             label="Name of the currency to buy"
             placeholder="BTC"
             required clearable
           ></v-text-field>
 
           <v-text-field
-            v-model="currencyToBuy.quantity"
+            v-model="currencyToBuy.quantityToBuy"
             label="Quantity of the currency to buy"
             placeholder="10"
             required clearable
           ></v-text-field>
 
           <v-select
-            v-model="currencyToBuy.exchange"
+            v-model="currencyToBuy.currencyToSell"
             :items="currenciesNameByExchange"
             label="Currency to buy with"
           ></v-select>
 
           <v-text-field
-            v-model="currencyToBuy.investment"
+            v-model="currencyToBuy.quantityToSell"
             label="Quantity of currency to exchange"
             placeholder="250"
             required clearable
@@ -50,8 +48,6 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-col>
-  </v-row>
 </template>
 
 <script>
@@ -60,7 +56,7 @@ import { mapGetters } from 'vuex'
 
   export default {
     data: () => ({
-      currencyToBuy: {}
+      currencyToBuy: {},
     }),
 
     methods: {
@@ -68,14 +64,18 @@ import { mapGetters } from 'vuex'
         if(!this.currencyToBuy.investment) {
           this.currencyToBuy.investment = 0
         }
-        this.$store.dispatch('post_buyCurrency', this.currencyToBuy)
+        this.$store.dispatch('post_orderCurrency', this.currencyToBuy)
+
+        this.currencyToBuy.operation = 'buy'
+        this.$store.dispatch('post_history', this.currencyToBuy)
       },
     },
 
     computed: {
       ...mapGetters({
-        exchanges: 'getExchanges'
+        exchanges: 'getExchanges',
       }),
+
       currenciesNameByExchange() {
         return this.$store.getters.getCurrenciesNameByExchange(this.currencyToBuy.exchange)
       }

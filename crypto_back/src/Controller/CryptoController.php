@@ -25,38 +25,7 @@ class CryptoController extends ApiController
     }
 
     /**
-    * @Route("/crypto/newCrypto", methods="POST")
-    */
-    public function newCurrency(Request $request, CryptoRepository $cryptoRepository, EntityManagerInterface $em)
-    {
-        $parameters = json_decode($request->getContent(), true);
-
-        $alreadyExists = $cryptoRepository->checkIfAlreadyExists($parameters['currency'], $parameters['exchange']);
-        
-        //If currency already exists, update the database. Otherwise, crete the entry
-        if($alreadyExists) {
-            $cryptoRepository->buyCurrency(
-                $parameters['currency'], 
-                $parameters['exchange'], 
-                $parameters['quantity'], 
-                $parameters['investment']
-            );
-        } else {
-            $crypto = new Crypto;
-            $crypto->setPlateforme($parameters['exchange']);
-            $crypto->setNom($parameters['currency']);
-            $crypto->setQtt($parameters['quantity']);
-            $crypto->setInvestissement($parameters['investment']);
-            $em->persist($crypto);          
-        }
-
-        $em->flush();
-
-        return $this->respondCreated();
-    }
-
-    /**
-    * @Route("/crypto/sellCrypto", methods="POST")
+    * @Route("/crypto/orderCurrency", methods="POST")
     */
     public function sell(Request $request, CryptoRepository $cryptoRepository, EntityManagerInterface $em)
     {
