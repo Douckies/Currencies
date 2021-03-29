@@ -27,6 +27,6 @@ Application : <br />
     * Application functionnal with empty DB
   
 # Next targets  
-
 Operations : <br /> <br />
   - Unitary test to validate the form <br />
+  - Hosting on a website server so it is accessible from the internet
