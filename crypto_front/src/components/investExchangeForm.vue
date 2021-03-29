@@ -5,12 +5,14 @@
             v-model='investInExchange.exchange'
             label="Exchange"
             placeholder="Binance"
+            :rules='exchangeRules'
             required
           ></v-text-field>
           <v-text-field
             v-model='investInExchange.quantityToBuy'
-            label="Value (€)"
+            label="Value ($)"
             placeholder="500"
+            :rules="investRules"
             required 
           ></v-text-field>
         </v-card-text>
@@ -35,7 +37,17 @@ export default {
 
     data() {
       return {
-        investInExchange: {}
+        investInExchange: {},
+
+        exchangeRules: [
+          v => !!v || 'You need to tell us which exchange will be top up !',
+        ],
+
+        investRules: [
+          v => !!v || 'How much will you invest in this exchange ?',
+          v => !isNaN(v) || 'You need to put a number here !',
+          v => v >= 0 || 'Cannot top up a negative value bud'
+        ],
       }
     },
 
@@ -45,7 +57,6 @@ export default {
         this.investInExchange.investment = this.investInExchange.quantityToBuy
         this.$store.dispatch('post_investment', this.investInExchange)
         this.$store.dispatch('post_orderCurrency', this.investInExchange)
-        this.$store.dispatch('post_history', this.investInExchange)
       }
     },
 }

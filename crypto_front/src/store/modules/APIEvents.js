@@ -5,10 +5,15 @@ export default {
         curenciesOwned: [],
         totalInvestment: [],
         history: [],
+        geckoCoinsInformations: []
     },
     mutations: {
         GET_CRYPTO(state, value) {
             state.curenciesOwned = value.data
+        },
+
+        GET_GECKOCOINS_CRYPTO(state, value) {
+            state.geckoCoinsInformations = value.data
         },
 
         POST_CRYPTO(state, value) {
@@ -36,6 +41,13 @@ export default {
             const value = await apiCalls.getCurrenciesOwned()
             if(value) {
                 commit('GET_CRYPTO', value)
+            }
+        },
+        
+        async get_gecko_coins_information({commit}) {
+            const value = await apiCalls.getGeckoCoinsInformation()
+            if(value) {
+                commit('GET_GECKOCOINS_CRYPTO', value)
             }
         },
 
@@ -70,6 +82,7 @@ export default {
     },
     getters: {
         getCurrenciesOwned: state => state.curenciesOwned,
+        getGeckoCoinInformations: state => state.geckoCoinsInformations,
 
         getTotalInvestment: state => state.totalInvestment,
         getExchanges: state => state.totalInvestment.map(item => item.plateforme),
@@ -79,6 +92,12 @@ export default {
         getCurrenciesNameByExchange: (state) => (exchangeToFilter) => {
             let currenciesFiltered = state.curenciesOwned.filter(currency => currency.plateforme === exchangeToFilter)
             return currenciesFiltered.map(currency => currency.nom)
+        },
+
+        getUSDByExchange: state => (exchange) => {
+            let USDOnExchange = state.curenciesOwned.filter(currency => currency.plateforme === exchange
+                && currency.nom === 'USD')
+            return USDOnExchange.map(currency => currency.qtt)
         }
     },
     modules: {}

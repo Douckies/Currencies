@@ -1,47 +1,39 @@
 <template>
   <v-app>
-    <v-row>
-      <v-spacer/>
-      <v-col md="2">
-        <v-btn class="ma-1" plain 
-        @click='investInExchange = true; buyCurrency = false; sellCurrency = false'>
-          Invest in Exchange
-        </v-btn>
-      </v-col>
+    <div class='buttons'>
+      <v-row>
+        <v-col
+        md=3
+        v-for='operation in operations'
+        :key='operation.id'>
+          <v-btn class="button" plain 
+          @click='selection = operation.action'
+          >
+            {{operation.name}}
+          </v-btn>
+        </v-col>
+      </v-row>
+    </div>
+    
+    <div class='field'>
+      <v-row>
+        <v-spacer></v-spacer>
+        <v-col md=7>
+          <div v-if='selection === "buy"'>
+            <buyCurrencyForm/>
+          </div>
 
-      <v-col md="2">
-        <v-btn class="ma-1" plain 
-        @click='buyCurrency = true; investInExchange = false; sellCurrency = false'>
-          Buy currency
-        </v-btn>
-      </v-col>
+          <div v-if='selection === "invest"'>
+            <investExchangeForm/>
+          </div>
 
-      <v-col md="2">
-        <v-btn class="ma-1" plain 
-        @click='sellCurrency = true; investInExchange = false; buyCurrency = false'>
-          Sell currency
-        </v-btn>
-      </v-col>
-      <v-spacer/>
-    </v-row>
-
-    <v-row>
-      <v-spacer/>
-      <v-col>
-        <div v-if='buyCurrency'>
-          <buyCurrencyForm/>
-        </div>
-
-        <div v-if='investInExchange'>
-          <investExchangeForm/>
-        </div>
-
-        <div v-if='sellCurrency'>
-          <sellCurrency/>
-        </div>
-      </v-col>
-      <v-spacer/>
-    </v-row>
+          <div v-if='selection === "sell"'>
+            <sellCurrency/>
+          </div>
+        </v-col>
+        <v-spacer></v-spacer>
+      </v-row>
+    </div>
   </v-app>
 </template>
 
@@ -59,9 +51,12 @@ import investExchangeForm from '@/components/investExchangeForm.vue'
 
     data() {
       return {
-        buyCurrency: false,
-        investInExchange: false,
-        sellCurrency: false
+        selection: "",
+        operations: [
+          {id: 0, name: "Invest", action: "invest"},
+          {id: 1, name: "Buy", action: "buy"},
+          {id: 2, name: "Sell", action: "sell"}
+        ],
       }
     },
 
@@ -70,3 +65,16 @@ import investExchangeForm from '@/components/investExchangeForm.vue'
     },
   }
 </script>
+
+<style scoped>
+.buttons {
+  margin-left: 25%
+}
+.field {
+  margin-top: 25px
+}
+.button {
+  text-align: center;
+  width: 100px
+}
+</style>

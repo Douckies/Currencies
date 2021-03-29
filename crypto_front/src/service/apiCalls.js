@@ -15,6 +15,10 @@ export default {
     return apiClient.get("/cryptos");
   },
 
+  getGeckoCoinsInformation() {
+    return apiClient.get("/geckoCoins");
+  },
+
   getInvestment() {
     return apiClient.get("/apport");
   },

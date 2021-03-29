@@ -4,19 +4,21 @@
         <v-col>
             <h1> Exchange {{selectedExchange.plateforme}} </h1>
             <p> Currencies available in this exchange : </p>
-            <ul>
-                <li v-for='currency in exchangeCurrencies'
-                :key='currency.nom'>
-                    {{currency.nom}}
-                </li>
-            </ul>
+            
+            <list :currencies='exchangeCurrencies'/>
         </v-col>
     </v-row>
 </v-app>
 </template>
 
 <script>
+import list from '@/components/listing.vue'
+
 export default {
+    components: {
+        list
+    },
+
     props: {
         selectedExchange: {
             type: Object,

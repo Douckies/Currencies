@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-card>
+        <v-card v-if='historyList.length > 0'>
             <v-card-text>
                 <div class="overline mb-4">
                     History

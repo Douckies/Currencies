@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20210303195600 extends AbstractMigration
+final class Version20210329092743 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -20,12 +20,14 @@ final class Version20210303195600 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE history ADD operation VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE crypto ADD icone VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE history CHANGE bought_currency_qtt bought_currency_qtt NUMERIC(20, 4) DEFAULT NULL, CHANGE sold_currency_qtt sold_currency_qtt NUMERIC(20, 4) DEFAULT NULL');
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE history DROP operation');
+        $this->addSql('ALTER TABLE crypto DROP icone');
+        $this->addSql('ALTER TABLE history CHANGE bought_currency_qtt bought_currency_qtt INT NOT NULL, CHANGE sold_currency_qtt sold_currency_qtt INT NOT NULL');
     }
 }

@@ -32,6 +32,8 @@ class HistoryController extends ApiController
         $parameters = json_decode($request->getContent(), true);
         $time = date("d-m-Y, H:i:s");
 
+        dump($parameters);
+
         $history = new History;
         $history->setDate($time);
         $history->setExchange($parameters['exchange']);

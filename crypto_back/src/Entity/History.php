@@ -33,7 +33,7 @@ class History
     private $boughtCurrency;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="decimal", precision=20, scale=4, nullable=true)
      */
     private $boughtCurrencyQtt;
 
@@ -43,7 +43,7 @@ class History
     private $soldCurrency;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="decimal", precision=20, scale=4, nullable=true)
      */
     private $soldCurrencyQtt;
 
@@ -93,12 +93,12 @@ class History
         return $this;
     }
 
-    public function getBoughtCurrencyQtt(): ?int
+    public function getBoughtCurrencyQtt(): ?string
     {
         return $this->boughtCurrencyQtt;
     }
 
-    public function setBoughtCurrencyQtt(int $boughtCurrencyQtt): self
+    public function setBoughtCurrencyQtt(string $boughtCurrencyQtt): self
     {
         $this->boughtCurrencyQtt = $boughtCurrencyQtt;
 
@@ -117,12 +117,12 @@ class History
         return $this;
     }
 
-    public function getSoldCurrencyQtt(): ?int
+    public function getSoldCurrencyQtt(): ?string
     {
         return $this->soldCurrencyQtt;
     }
 
-    public function setSoldCurrencyQtt(int $soldCurrencyQtt): self
+    public function setSoldCurrencyQtt(string $soldCurrencyQtt): self
     {
         $this->soldCurrencyQtt = $soldCurrencyQtt;
 

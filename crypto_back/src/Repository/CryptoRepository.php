@@ -23,7 +23,15 @@ class CryptoRepository extends ServiceEntityRepository
     public function checkIfAlreadyExists($cryptoToTest, $plateforme)
     {
         $querySelect = $this->createQueryBuilder('q');
-        $alreadyExists = $querySelect
+        if($plateforme === 'NULL') {
+            $alreadyExists = $querySelect
+            ->select('q.nom')
+            ->andWhere('q.nom = ?1')
+            ->setParameter(1, $cryptoToTest)
+            ->getQuery()
+            ->getResult();
+        } else {
+            $alreadyExists = $querySelect
             ->select('q.nom')
             ->andWhere('q.nom = ?1')
             ->andWhere('q.plateforme = ?2')
@@ -31,8 +39,25 @@ class CryptoRepository extends ServiceEntityRepository
             ->setParameter(2, $plateforme)
             ->getQuery()
             ->getResult();
+        }
+
         
         return $alreadyExists;
+    }
+
+    public function updateCurrencyWithGeckoCoinsInformations($currency, $current_price, $market_cap, $image) {
+        //Find the currencies on the database
+        $currencyToUpdate = $this->findByNom($currency);
+
+        for ($i = 0; $i < count($currencyToUpdate); $i++) {
+            $currencyToUpdate[$i]->setCurrentPrice($current_price);
+            $currencyToUpdate[$i]->setMarketCap($market_cap);
+            $currencyToUpdate[$i]->setIcone($image);
+
+            $actualValue = $currencyToUpdate[$i]->getQtt() * $current_price;
+            $currencyToUpdate[$i]->setActualValue($actualValue);
+            $currencyToUpdate[$i]->setActualBenefits($actualValue - $currencyToUpdate[$i]->getInvestissement());
+        }
     }
 
     public function buyCurrency($currency, $exchange, $quantityBought, $investment) {
