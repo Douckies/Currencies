@@ -29,4 +29,5 @@ Application : <br />
 # Next targets  
 Operations : <br /> <br />
   - Unitary test to validate the form <br />
-  - Hosting on a website server so it is accessible from the internet
+  - Hosting on a website server so it is accessible from the internet <br />
+  - Better display of the snackbars + better confirmation once an order (buy, sell or invest) has been validated
